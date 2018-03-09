@@ -141,15 +141,15 @@ item elements. Your job is to mirror this functionality to create all of the nec
 """
 def parseXml(f):
     dom = parse(f) # creates a dom object for the supplied xml file
-    print dom.nodeName
-    pizza = dom.getElementsByTagName('Items')
+   # print dom.nodeName
+   # pizza = dom.getElementsByTagName('Items')
     
-    for node in dom.getElementsByTagName('Items'):
-        fet = ""
-        fet= fet + node.toxml()
-        print fet
-        with open('test.dat', 'w') as f:
-            f.write(fet)
+   # for node in dom.getElementsByTagName('Items'):
+    #    fet = ""
+     #   fet= fet + node.toxml()
+      #  print fet
+       # with open('test.dat', 'w') as f:
+        #    f.write(fet)
         
     
         
@@ -179,6 +179,24 @@ def main(argv):
     for f in argv[1:]:
         if isXml(f):
             parseXml(f)
+            cl = MongoClient()
+            coll = cl["dbname"]["collectionname"]
+
+            tree = ET.parse()
+            root = tree.getroot()
+
+            for event in root.findall():
+                doc ={}
+                for c in event.getchildren():
+                    if c.tag in (""):
+                        doc[c.tag] = c.text
+                    elif c.tag == "":
+                        doc[c.tag] = {}
+                        for v in c.getchildren():
+                            if v.tag in (""):
+                                doc[c.tag][v.tag] = v.text
+                coll.insert(doc)
+                    
             #print "Success parsing " + f
             
             
