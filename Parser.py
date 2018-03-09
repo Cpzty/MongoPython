@@ -171,17 +171,15 @@ def main(argv):
             cl = MongoClient()
             coll = cl["dbAlgo"]["colAlgo"]
 
-            tree = ET.parse()
+            tree = ET.parse(f)
             root = tree.getroot()
 
-            for event in root.findall():
+            for event in root.findall("./Items"):
                 doc ={}
                 for c in event.getchildren():
-                    if c.tag in ("./Items"):
+                    if c.tag in ("Item", "Name", "Category", "Currency", "First_Bid", "Number_of_Bids", "Location", "Country", "Started", "Ends", "Seller", "Description"):
                         doc[c.tag] = c.text
-                        for v in c.getchildren():
-                            if v.tag in ("Item", "Name", "Category", "Currency", "First_Bid", "Number_of_Bids", "Location", "Country", "Started", "Ends", "Seller", "Description"):
-                                doc[c.tag][v.tag] = v.text
+                        
                 coll.insert(doc)
                     
             #print "Success parsing " + f
